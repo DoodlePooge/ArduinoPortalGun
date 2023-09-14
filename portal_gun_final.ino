@@ -12,9 +12,9 @@ TMRpcm tmrpcm;
 #define NUM_LEDS    200
 Adafruit_NeoPixel strip(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
 
-#define DUO_TOGGLE A2
-#define BLU_BUTT A3
-#define ORG_BUTT A4
+#define DUO_TOGGLE A1
+#define BLU_BUTT A2
+#define ORG_BUTT A3
 bool duo_line = true;
 
 void setup() {
