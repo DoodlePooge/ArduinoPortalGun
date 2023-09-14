@@ -7,19 +7,18 @@
 #include <pcmRF.h>
 TMRpcm tmrpcm;
 
-#include <FastLED.h>
+#include <Adafruit_NeoPixel.h>
 #define LED_PIN     6
-#define NUM_LEDS    21
-CRGB leds[NUM_LEDS];
+#define NUM_LEDS    200
+Adafruit_NeoPixel strip(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
 
-#define DUO_TOGGLE 2
-#define BLU_BUTT 3
-#define ORG_BUTT 5
+#define DUO_TOGGLE A2
+#define BLU_BUTT A3
+#define ORG_BUTT A4
 bool duo_line = true;
 
 void setup() {
   Serial.begin(9600);
-  FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
   pinMode(ORG_BUTT, INPUT);
   pinMode(BLU_BUTT, INPUT); 
   pinMode(DUO_TOGGLE, INPUT);
@@ -35,12 +34,17 @@ void setup() {
   Serial.println("SD Connected.");
 
 
-  fill_solid(leds, NUM_LEDS, CRGB (0, 0, 0));
+  strip.begin();
+  strip.setBrightness(40);
+  strip.clear();
+
   tmrpcm.play("PWR.wav");
+  delay(500);
+
   for (int i = 0; i <= NUM_LEDS; i++) {
-    leds[i] = CRGB (0,36,135);
-    FastLED.show();
-    delay(60);
+    strip.setPixelColor(i, 0,36,135);
+    strip.show();
+    delay(15);
   }
   delay(2500);
   
@@ -51,34 +55,34 @@ void setup() {
 }
 
 void shoot_blue(){
-  fill_solid(leds, NUM_LEDS, CRGB (0,36,135));
-  FastLED.show();
+  strip.Color(0,36,135);
+  strip.show();
   tmrpcm.play("BLU.wav");
   delay(1200);
 }
 
 void shoot_orange(){
-  fill_solid(leds, NUM_LEDS, CRGB (85,13,0));
-  FastLED.show();
+  strip.Color(85,13,0);
+  strip.show();
   tmrpcm.play("ORG.wav");
   delay(1200);
 }
 
 void error() {
-  fill_solid(leds, NUM_LEDS, CRGB (0,9,31));
-  FastLED.show();
+  strip.Color(0,9,31);
+  strip.show();
   tmrpcm.play("FAL.wav");
   delay(1000);
-  fill_solid(leds, NUM_LEDS, CRGB (0,36,135));
-  FastLED.show();
+  strip.Color(0,36,135);
+  strip.show();
 }
 
 
 void loop(){
 
   if(digitalRead(DUO_TOGGLE) == LOW) {
-    fill_solid(leds, NUM_LEDS, CRGB (0,36,135));
-    FastLED.show();
+    strip.Color(0,36,135);
+    strip.show();
 
     if(digitalRead(BLU_BUTT) == HIGH) {
       shoot_blue();
